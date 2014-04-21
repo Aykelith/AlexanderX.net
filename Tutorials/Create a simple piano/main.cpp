@@ -3,28 +3,32 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 
-sf::SoundBuffer soundsBuffers[12];
-sf::Sound keySounds[12];
+const unsigned int whiteKeys = 7;
+const unsigned int blackKeys = 5;
+const unsigned int keys = 12;
 
-sf::RectangleShape keyRects[12];
+std::array<sf::SoundBuffer, keys> soundBuffers;
+std::array<sf::Sound, keys> keySounds;
+
+std::array<sf::RectangleShape, keys> keyRects;
 const sf::Vector2f whiteKeySize(80, 230);
 const sf::Vector2f blackKeySize(40, 120);
 
 void loadBuffers()
 {
-    std::string filesName[12] = {"sounds/C.wav", "sounds/D.wav", "sounds/E.wav", "sounds/F.wav", "sounds/G.wav", "sounds/A.wav", "sounds/B.wav", "sounds/C#.wav", "sounds/D#.wav", "sounds/F#.wav", "sounds/G#.wav", "sounds/A#.wav"};
+    std::string filesName[keys] = {"sounds/C.wav", "sounds/D.wav", "sounds/E.wav", "sounds/F.wav", "sounds/G.wav", "sounds/A.wav", "sounds/B.wav", "sounds/C#.wav", "sounds/D#.wav", "sounds/F#.wav", "sounds/G#.wav", "sounds/A#.wav"};
 
-    for (int i=0; i<12; ++i)
+    for (unsigned int i=0; i<soundBuffers.size(); ++i)
     {
-        soundsBuffers[i].loadFromFile(filesName[i]);
+        soundBuffers[i].loadFromFile(filesName[i]);
     }
 }
 
 void setBuffers()
 {
-    for (int i=0; i<12; ++i)
+    for (unsigned int i=0; i<keySounds.size(); ++i)
     {
-        keySounds[i] = sf::Sound(soundsBuffers[i]);
+        keySounds[i] = sf::Sound(soundBuffers[i]);
         keySounds[i].setPlayingOffset(sf::milliseconds(700));
     }
 }
@@ -32,7 +36,7 @@ void setBuffers()
 void setupPiano()
 {
     // Creating the white keys
-    for (int i=0; i<7; ++i)
+    for (unsigned int i=0; i<whiteKeys; ++i)
     {
         keyRects[i].setSize(whiteKeySize);
         keyRects[i].setFillColor(sf::Color::White);
@@ -42,9 +46,9 @@ void setupPiano()
     }
 
     // Creating the black keys
-    // The i still goes until 7 even if we only have 5 black keys to easily set their position
+    // The i still goes until 7( whiteKeys) even if we only have 5 black keys to easily set their position
     // We use a j variable to know the position of rects in the array
-    for (int i=0, j=7; i<7; ++i)
+    for (unsigned int i=0, j=whiteKeys; i<whiteKeys; ++i)
     {
         // Because in the position 2(E) and 6(B) we don't have black keys, we need to skip them
         if (i!=2 && i!=6)
@@ -67,12 +71,12 @@ int main()
     setBuffers();
     setupPiano();
 
-    //                     A,  S, D, F, G, H, J,  W, E,  R,  T,  Y
-	int keyboardKey[12] = {0, 18, 3, 5, 6, 7 ,9, 22, 4, 17, 19, 24};
+    //                       A,  S, D, F, G, H, J,  W, E,  R,  T,  Y
+	int keyboardKey[keys] = {0, 18, 3, 5, 6, 7 ,9, 22, 4, 17, 19, 24};
 
-	bool keyReady[12] = {true, true, true, true, true, true, true, true, true, true, true, true};
+	bool keyReady[keys] = {true, true, true, true, true, true, true, true, true, true, true, true};
 
-	sf::RenderWindow window(sf::VideoMode(whiteKeySize.x*7, whiteKeySize.y), "Piano");
+	sf::RenderWindow window(sf::VideoMode(whiteKeySize.x*whiteKeys, whiteKeySize.y), "Piano");
 
 	while (window.isOpen())
 	{
@@ -84,7 +88,7 @@ int main()
 
             if (event.type == sf::Event::KeyPressed)
             {
-            	for (int i=0; i<12; ++i)
+            	for (unsigned int i=0; i<keys; ++i)
             	{
                     // Verifying if the key is pressed and ready
             		if (event.key.code == sf::Keyboard::Key(keyboardKey[i]) && keyReady[i])
@@ -103,7 +107,7 @@ int main()
 
             if (event.type == sf::Event::KeyReleased)
             {
-            	for (int i=0; i<12; ++i)
+            	for (unsigned int i=0; i<keys; ++i)
             	{
                     // Verifying if the key is released and if it has been pressed
             		if (event.key.code == sf::Keyboard::Key(keyboardKey[i]) && !keyReady[i])
@@ -117,7 +121,7 @@ int main()
             			keyReady[i] = true;
 
                         // Coloring back the piano keys
-            			if (i<7) keyRects[i].setFillColor(sf::Color::White);
+            			if (i<whiteKeys) keyRects[i].setFillColor(sf::Color::White);
                         else keyRects[i].setFillColor(sf::Color::Black);
             		}
             	}
@@ -126,7 +130,7 @@ int main()
 
         window.clear();
 
-        for (int i=0; i<12; ++i)
+        for (unsigned int i=0; i<keyRects.size(); ++i)
         {
         	window.draw(keyRects[i]);
         }
