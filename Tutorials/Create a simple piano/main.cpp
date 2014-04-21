@@ -1,10 +1,9 @@
-#include <vector>
+#include <array>
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 
 const unsigned int whiteKeys = 7;
-const unsigned int blackKeys = 5;
 const unsigned int keys = 12;
 
 std::array<sf::SoundBuffer, keys> soundBuffers;
