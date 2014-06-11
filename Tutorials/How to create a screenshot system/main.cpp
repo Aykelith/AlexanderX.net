@@ -1,4 +1,4 @@
-#include <SFML/Graphics.hpp>
+ st#include <SFML/Graphics.hpp>
 #include <iostream>
 #include <ctime>
 
@@ -16,7 +16,7 @@ int main()
 
             if (event.type == sf::Event::KeyPressed)
             {
-            	if (event.key.code == 89)
+            	if (event.key.code == sf::Keyboard::F5)
                 {
                     // Capturing the window to a sf::Image
                     sf::Image screenshot = window.capture();
@@ -27,7 +27,7 @@ int main()
                     epoch_time = time( NULL );
                     tm_p = localtime( &epoch_time );
 
-                    // Creating the screenshot name
+                    // Making the screenshot name
                     std::string screenshotName = std::to_string(tm_p->tm_mday) + "-" + std::to_string(tm_p->tm_mon) + "-" + std::to_string(tm_p->tm_year) + " " + std::to_string(tm_p->tm_hour) + std::to_string(tm_p->tm_min) + std::to_string(tm_p->tm_sec);
                  
                     // Saving to a file
